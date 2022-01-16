@@ -32,7 +32,8 @@ function makeASDFType(pyobj::PyObject)
         pyobj.yaml_tag
     catch
         # Convert to a nice Julia type if possible
-        return convert(PyAny, pyobj)
+	converted = convert(PyAny, pyobj)
+	return (typeof(converted) == Dict{Any,Any} ? Tree(converted) : converted)
     end
     type_ = get(tag2asdftype, tag, empty)
     if type_ === empty
